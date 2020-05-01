@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+	then
+		echo 'usage:'$0' [args]... '
+	else
+		mkdir -p level_$1
+		cp -r level_0_COMPLETE/get_flag.sh level_$1/
+		cp -r level_0_COMPLETE/inc level_$1/
+		echo 'generated new level !!!'
+fi
