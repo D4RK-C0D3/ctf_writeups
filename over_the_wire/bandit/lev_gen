@@ -1,11 +1,27 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]
-	then
-		echo 'usage: '$0' [args]... '
-	else
-		mkdir -p level_$1
-		cp -r level_0_COMPLETE/get_flag.sh level_$1/
-		cp -r level_0_COMPLETE/inc level_$1/
-		echo 'generated new level !!!'
+then
+echo 'usage: '$0' [args]... '
+else
+mkdir -p level_$1
+cat << EOF > level_$1/get_flag.sh
+#!/bin/bash
+
+cd inc/ && ./find_flag.sh 2> /dev/null && cat flag
+
+EOF
+cd level_$1/ && chmod +x get_flag.sh
+mkdir -p level_$1/inc
+
+cat << EOF > level_$1/inc/find_flag.sh
+#!/bin/bash
+
+sshpass -p $(cat level_$(echo $1 - 1 | bc)_COMPLETE/inc/flag) ssh $(echo bandit$1)@bandit.labs.overthewire.org -p 2220 # "bash -s" < script.sh > flag
+
+EOF
+cd level_$1/inc/ && chmod +x find_flag.sh 
+touch level_$1/inc/script.sh           
+cd level_$1/inc/ && chmod +x script.sh
+echo 'generated new level !!!'
 fi
